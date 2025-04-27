@@ -1,8 +1,8 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { CheckCircleIcon, XCircleIcon, ArrowLeftIcon, DocumentTextIcon, AcademicCapIcon, BriefcaseIcon } from '@heroicons/react/24/solid';
+import { useEffect, useState, Suspense } from 'react';
+import {  XCircleIcon, ArrowLeftIcon, DocumentTextIcon, AcademicCapIcon, BriefcaseIcon } from '@heroicons/react/24/solid';
 
 interface ParsedResume {
   skills: Array<{
@@ -47,7 +47,7 @@ const safeAtob = (str: string): string => {
   }
 };
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams();
   const [parsedData, setParsedData] = useState<ParsedResume | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -226,5 +226,28 @@ export default function ResultsPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+        <div className="max-w-4xl mx-auto p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="animate-pulse space-y-8">
+              <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+              <div className="space-y-4">
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    }>
+      <ResultsContent />
+    </Suspense>
   );
 } 
